@@ -23,7 +23,6 @@ services:
        BCOIN_VERSION: v2.2.0
     networks:
       - "bcoin"
-      - "nginx-proxy"
     volumes:
       - ~/.bcoin:/data
       - ${PWD}/secrets/bcoin.conf:/data/bcoin.conf
@@ -32,4 +31,4 @@ services:
 networks:
   bcoin_tn:
     external:
-      name: "bcoin"
+      name: "bcoin_tn"
