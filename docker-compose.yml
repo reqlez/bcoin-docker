@@ -2,23 +2,25 @@ version: '2'
 
 services:
   bcoin:
-    image: purse/bcoin
-    container_name: bcoin
+    build:
+      context: .
+    container_name: bcoin_tn
     restart: unless-stopped
     ports:
       #-- Mainnet
-      - "8333:8333"
-      - "8332:8332" # RPC/HTTP
-      - "8334:8334" # Wallet
+      #- "8333:8333"
+      #- "8332:8332" # RPC/HTTP
+      #- "8334:8334" # Wallet
       #-- Testnet
-      #- "18333:18333"
-      #- "18332:18332" # RPC/HTTP
-      #- "18334:18334"
+      - "18333:18333"
+      - "18332:18332" # RPC/HTTP
+      - "18334:18334"
     environment:
       BCOIN_CONFIG: /data/bcoin.conf
       VIRTUAL_HOST: bcoin.yourdomain.org
-      VIRTUAL_PORT: 8332
-      #VIRTUAL_PORT: 18332 # Testnest
+      #VIRTUAL_PORT: 8332
+      VIRTUAL_PORT: 18332 # Testnest
+       BCOIN_VERSION: v2.2.0
     networks:
       - "bcoin"
       - "nginx-proxy"
@@ -27,23 +29,7 @@ services:
       - ${PWD}/secrets/bcoin.conf:/data/bcoin.conf
       - ${PWD}/secrets/wallet.conf:/data/wallet.conf
 
-  nginx_proxy:
-    image: jwilder/nginx-proxy
-    container_name: nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - "nginx-proxy"
-    volumes:
-      - ./secrets/certs:/etc/nginx/certs:ro
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-
 networks:
-  bcoin:
+  bcoin_tn:
     external:
       name: "bcoin"
-  nginx-proxy:
-    external:
-      name: "nginx-proxy"
